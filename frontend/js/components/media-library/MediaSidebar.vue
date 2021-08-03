@@ -32,7 +32,12 @@
           </button>
         </a17-buttonbar>
       </div>
-
+      <div class="mediasidebar__inner">
+        <a17-textfield :label="$trans('media-library.sidebar.url', 'URL')" v-if="hasSingleMedia" :small="true"
+                       ref="url"
+                       :note="$trans('media-library.sidebar.click_to_copy', 'Click to copy')"
+                       :initialValue="firstMedia.original" :readonly="true" @focus="copyText"/>
+      </div>
       <form v-if="hasMedia" ref="form" class="mediasidebar__inner mediasidebar__form" @submit="submit">
         <span class="mediasidebar__loader" v-if="loading"><span class="loader loader--small"><span></span></span></span>
         <a17-vselect v-if="!fieldsRemovedFromBulkEditing.includes('tags')" :label="$trans('media-library.sidebar.tags')"
@@ -261,6 +266,16 @@
       })
     },
     methods: {
+      copyText: function () {
+        if (this.$refs.url) {
+          this.$refs.url.select()
+          document.execCommand('copy')
+          this.$store.commit(NOTIFICATION.SET_NOTIF, {
+            message: this.$trans('media-library.sidebar.url_copied', 'URL Copied'),
+            variant: 'success'
+          })
+        }
+      },
       replaceMedia: function () {
         // Open confirm dialog if any
         if (this.$root.$refs.replaceWarningMediaLibrary) {
