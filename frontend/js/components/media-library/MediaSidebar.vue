@@ -267,7 +267,7 @@
     },
     methods: {
       copyText: function () {
-        if(this.$refs.url) {
+        if (this.$refs.url) {
           this.$refs.url.select()
           document.execCommand('copy')
           this.$store.commit(NOTIFICATION.SET_NOTIF, {
