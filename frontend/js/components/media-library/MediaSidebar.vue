@@ -268,8 +268,8 @@
     methods: {
       copyText: function () {
         if (this.$refs.url) {
-          this.$refs.url.select()
-          document.execCommand('copy')
+          this.$refs.url.$el.querySelector('input').select()
+          navigator.clipboard.writeText(this.firstMedia.original)
           this.$store.commit(NOTIFICATION.SET_NOTIF, {
             message: this.$trans('media-library.sidebar.url_copied', 'URL Copied'),
             variant: 'success'
