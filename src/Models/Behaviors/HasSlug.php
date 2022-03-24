@@ -2,7 +2,7 @@
 
 namespace A17\Twill\Models\Behaviors;
 
-use Illuminate\Support\Facades\DB;
+use A17\Twill\Facades\TwillCapsules;
 use Illuminate\Support\Str;
 
 trait HasSlug
@@ -57,7 +57,7 @@ trait HasSlug
             return $slug;
         }
 
-        return $this->getCapsuleSlugClass(class_basename($this));
+        return TwillCapsules::getCapsuleForModel(class_basename($this))->getSlugModel();
     }
 
     protected function getSlugClassName()
@@ -131,14 +131,15 @@ trait HasSlug
         }
 
         //active old slug if already existing or create a new one
-        if ((($oldSlug = $this->getExistingSlug($slugParams)) != null)
-            && ($restoring ? $slugParams['slug'] === $this->suffixSlugIfExisting($slugParams) : true)) {
+        if (
+            (($oldSlug = $this->getExistingSlug($slugParams)) != null)
+            && ($restoring ? $slugParams['slug'] === $this->suffixSlugIfExisting($slugParams) : true)
+        ) {
             if (!$oldSlug->active && ($slugParams['active'] ?? false)) {
-                DB::table($this->getSlugsTable())->where('id', $oldSlug->id)->update(['active' => 1]);
+                $this->getSlugModelClass()::where('id', $oldSlug->id)->update(['active' => 1]);
                 $this->disableLocaleSlugs($oldSlug->locale, $oldSlug->id);
             }
         } else {
-
             $this->addOneSlug($slugParams);
         }
     }
@@ -149,8 +150,9 @@ trait HasSlug
      */
     public function getExistingSlug($slugParams)
     {
-        $query = DB::table($this->getSlugsTable())->where($this->getForeignKey(), $this->id);
         unset($slugParams['active']);
+
+        $query = $this->slugs();
 
         foreach ($slugParams as $key => $value) {
             //check variations of the slug
@@ -181,7 +183,7 @@ trait HasSlug
 
         $datas[$this->getForeignKey()] = $this->id;
 
-        $id = DB::table($this->getSlugsTable())->insertGetId($datas);
+        $id = $this->getSlugModelClass()::insertGetId($datas);
 
         $this->disableLocaleSlugs($slugParams['locale'], $id);
     }
@@ -193,23 +195,20 @@ trait HasSlug
      */
     public function disableLocaleSlugs($locale, $except_slug_id = 0)
     {
-        DB::table($this->getSlugsTable())
-            ->where($this->getForeignKey(), $this->id)
+        $this->getSlugModelClass()::where($this->getForeignKey(), $this->id)
             ->where('id', '<>', $except_slug_id)
             ->where('locale', $locale)
-            ->update(['active' => 0])
-        ;
+            ->update(['active' => 0]);
     }
 
     private function suffixSlugIfExisting($slugParams)
     {
         $slugBackup = $slugParams['slug'];
-        $table = $this->getSlugsTable();
 
         unset($slugParams['active']);
 
         for ($i = 2; $i <= $this->nb_variation_slug + 1; $i++) {
-            $qCheck = DB::table($table);
+            $qCheck = $this->getSlugModelClass()::query();
             $qCheck->whereNull($this->getDeletedAtColumn());
             foreach ($slugParams as $key => $value) {
                 $qCheck->where($key, '=', $value);

@@ -95,6 +95,7 @@
       },
       textfieldClasses: function () {
         return {
+          'wysiwyg__outer--limitHeight': this.limitHeight,
           's--disabled': this.disabled,
           's--focus': this.focused
         }
@@ -107,7 +108,7 @@
       },
       limitClasses: function () {
         return {
-          'wysiwyg__limit--red': this.counter < 10
+          'wysiwyg__limit--red': this.counter < (this.maxlength * 0.1)
         }
       },
       ...mapState({
@@ -243,8 +244,13 @@
           this.updateEditor(newValue)
         }
       },
-      textUpdate: debounce(function () {
-        this.saveIntoStore() // see formStore mixin
+      textUpdate: function () {
+        this.preventSubmit()
+        this._textUpdateInternal()
+      },
+      _textUpdateInternal: debounce(function () {
+        this.saveIntoStore()
+        this.allowSubmit()
       }, 600),
       toggleSourcecode: function () {
         this.editorHeight = (Math.max(50, this.$refs.editor.clientHeight) + this.toolbarHeight - 1) + 'px'
@@ -265,31 +271,9 @@
       getTextLength: function () {
         // see https://quilljs.com/docs/api/#getlength
         return this.quill.getLength() - (this.value.length === 0 ? 2 : 1)
-      },
-      preventEditorScroll: function () {
-        // see https://github.com/quilljs/quill/issues/482
-        this.$nextTick(() => {
-          const tooltips = document.querySelectorAll('.ql-tooltip')
-          tooltips.forEach((tooltip) => {
-            const action = tooltip.querySelector('.ql-action')
-            let scrollPosition
-            action.addEventListener('mouseover', () => {
-              scrollPosition = this.$refs.editorcontainer.scrollTop
-            })
-            tooltip.addEventListener('mouseup', (event) => {
-              setTimeout(() => {
-                this.$refs.editorcontainer.scrollTop = scrollPosition
-              }, 0)
-              event.preventDefault()
-              event.stopPropagation()
-            })
-          })
-        })
       }
     },
     mounted: function () {
-      this.preventEditorScroll()
-
       if (this.quill) return
 
       /* global hljs */
@@ -307,6 +291,10 @@
       this.options.readOnly = this.options.readOnly !== undefined ? this.options.readOnly : this.readonly
       this.options.formats = QuillConfiguration.getFormats(this.options.modules.toolbar) // Formats are based on current toolbar configuration
       this.options.bounds = this.$refs.editor
+
+      // Ensure pasting content do not make editor scroll to the top
+      // @see https://github.com/quilljs/quill/issues/1374#issuecomment-545112021
+      this.options.scrollingContainer = 'html'
 
       // register custom handlers
       // register anchor toolbar handler
@@ -336,6 +324,13 @@
     margin-top: 20px;
   }
 
+  .wysiwyg__outer--limitHeight {
+    .wysiwyg {
+      position: relative;
+      overflow: hidden;
+    }
+  }
+
   .wysiwyg__editor--limitHeight {
     max-height: calc(100vh - 250px);
     overflow-y: scroll;
@@ -343,7 +338,7 @@
     border: 1px solid $color__fborder;
     border-top: none;
     scroll-behavior: smooth;
-    margin-top: 32px;
+    margin-top: 52px;
     .input--error & {
       border-color: $color__error;
       border-top: none;
@@ -551,6 +546,12 @@
 
     .ql-editor .ql-anchor {
       text-decoration: underline $color__link;
+    }
+
+    // Ensure pasting content do not make editor scroll to the top
+    // @see https://github.com/quilljs/quill/issues/1374#issuecomment-545112021
+    .ql-clipboard {
+      position: fixed;
     }
 
     .ql-snow.ql-toolbar {

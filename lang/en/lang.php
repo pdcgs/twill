@@ -92,6 +92,7 @@ return [
             'open-in-editor' => 'Open in editor',
             'preview' => 'Preview',
             'add-item' => 'Add item',
+            'clone-block' => 'Clone block',
         ],
         'browser' => [
             'add-label' => 'Add',
@@ -247,6 +248,11 @@ return [
             'featured' => ':modelTitle items featured!',
             'error' => ':modelTitle items were not featured. Something wrong happened!',
         ],
+        'bulk-publish' => [
+            'unpublished' => ':modelTitle items unpublished!',
+            'published' => ':modelTitle items published!',
+            'error' => ':modelTitle items were not published. Something wrong happened!',
+        ],
     ],
     'main' => [
         'create' => 'Create',
@@ -369,6 +375,8 @@ return [
         'last-edit' => 'Last edited',
         'preview' => 'Preview changes',
         'publish' => 'Publish',
+        'scheduled' => 'Scheduled',
+        'expired' => 'Expired',
         'publish-close' => 'Publish and close',
         'publish-new' => 'Publish and create new',
         'published-on' => 'Published on',
@@ -393,6 +401,7 @@ return [
         'parent-page' => 'Parent page',
         'review-status' => 'Review status',
         'visibility' => 'Visibility',
+        'unsaved-changes' => 'There are unsaved changes',
     ],
     'select' => [
         'empty-text' => 'Sorry, no matching options.',

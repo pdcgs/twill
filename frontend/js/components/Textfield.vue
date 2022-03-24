@@ -87,6 +87,23 @@
         @blur="onBlur"
         @input="onInput"
       />
+      <input v-if="type === 'url'"
+        ref="input"
+        type="url"
+        :placeholder="placeholder"
+        :name="name"
+        :id="uniqId"
+        :disabled="disabled"
+        :maxlength="displayedMaxlength"
+        :required="required"
+        :readonly="readonly"
+        :autofocus="autofocus"
+        :autocomplete="autocomplete"
+        :value="value"
+        @focus="onFocus"
+        @blur="onBlur"
+        @input="onInput"
+      />
       <span class="input__limit f--tiny" :class="limitClasses" v-if="hasMaxlength">{{ counter }}</span>
     </div>
   </a17-inputframe>
@@ -153,7 +170,7 @@
       },
       limitClasses: function () {
         return {
-          'input__limit--red': this.counter < 10
+          'input__limit--red': this.counter < (this.maxlength * 0.1)
         }
       }
     },
@@ -204,11 +221,18 @@
         this.focused = false
         this.$emit('blur', newValue)
       },
-      onInput: debounce(function (event) {
+      onInput: function (event) {
+        this.preventSubmit()
+
+        this._onInputInternal(event)
+      },
+      _onInputInternal: debounce(function (event) {
         const newValue = event.target.value
         this.updateAndSaveValue(newValue)
 
         this.$emit('change', newValue)
+
+        this.allowSubmit()
       }, 250),
       resizeTextarea: function () {
         if (this.type !== 'textarea') return
@@ -273,7 +297,8 @@
     input[type="number"],
     input[type="text"],
     input[type="email"],
-    input[type="password"] {
+    input[type="password"],
+    input[type="url"] {
       @include resetfield;
       height:$height_input - 2px;
       line-height:$height_input - 2px;
@@ -360,7 +385,8 @@
     input[type="number"],
     input[type="text"],
     input[type="email"],
-    input[type="password"] {
+    input[type="password"],
+    input[type="url"] {
       height:$height_input - 10px - 2px;
       line-height:$height_input - 10px - 2px;
     }

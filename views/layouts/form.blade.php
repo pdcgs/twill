@@ -45,8 +45,11 @@
                 <a17-title-editor
                     name="{{ $titleFormKey }}"
                     :editable-title="{{ json_encode($editableTitle ?? true) }}"
+                    :control-languages-publication="{{ json_encode($controlLanguagesPublication) }}"
                     custom-title="{{ $customTitle ?? '' }}"
                     custom-permalink="{{ $customPermalink ?? '' }}"
+                    localized-permalinkbase="{{ json_encode($localizedPermalinkBase ?? '') }}"
+                    localized-custom-permalink="{{ json_encode($localizedCustomPermalink ?? '') }}"
                     slot="title"
                     @if($createWithoutModal ?? false) :show-modal="true" @endif
                     @if(isset($editModalTitle)) modal-title="{{ $editModalTitle }}" @endif
@@ -119,19 +122,21 @@
 @stop
 
 @section('initialStore')
-
     window['{{ config('twill.js_namespace') }}'].STORE.form = {
         baseUrl: '{{ $baseUrl ?? '' }}',
         saveUrl: '{{ $saveUrl }}',
         previewUrl: '{{ $previewUrl ?? '' }}',
         restoreUrl: '{{ $restoreUrl ?? '' }}',
+        availableBlocks: {},
+        blocks: {},
         blockPreviewUrl: '{{ $blockPreviewUrl ?? '' }}',
         availableRepeaters: {!! $availableRepeaters ?? '{}' !!},
         repeaters: {!! json_encode(($form_fields['repeaters'] ?? []) + ($form_fields['blocksRepeaters'] ?? [])) !!},
         fields: [],
         editor: {{ $editor ? 'true' : 'false' }},
         isCustom: {{ $customForm ? 'true' : 'false' }},
-        reloadOnSuccess: {{ ($reloadOnSuccess ?? false) ? 'true' : 'false' }}
+        reloadOnSuccess: {{ ($reloadOnSuccess ?? false) ? 'true' : 'false' }},
+        editorNames: []
     }
 
     window['{{ config('twill.js_namespace') }}'].STORE.publication = {
@@ -140,6 +145,8 @@
         createWithoutModal: {{ isset($createWithoutModal) && $createWithoutModal ? 'true' : 'false' }},
         withPublicationTimeframe: {{ json_encode(($schedule ?? true) && isset($item) && $item->isFillable('publish_start_date')) }},
         publishedLabel: '{{ $customPublishedLabel ?? twillTrans('twill::lang.main.published') }}',
+        expiredLabel: '{{twillTrans('twill::lang.publisher.expired')}}',
+        scheduledLabel: '{{twillTrans('twill::lang.publisher.scheduled')}}',
         draftLabel: '{{ $customDraftLabel ?? twillTrans('twill::lang.main.draft') }}',
         submitDisableMessage: '{{ $submitDisableMessage ?? '' }}',
         startDate: '{{ $item->publish_start_date ?? '' }}',

@@ -24,6 +24,16 @@ return [
     'admin_app_path' => env('ADMIN_APP_PATH', ''),
 
     /*
+   |--------------------------------------------------------------------------
+   | Application Admin Route Name
+   |--------------------------------------------------------------------------
+   |
+   | This value is added to the admin route names of your Admin application.
+   |
+    */
+    'admin_route_name_prefix' => env('ADMIN_ROUTE_NAME_PREFIX', 'admin.'),
+
+    /*
     |--------------------------------------------------------------------------
     | Application Admin Title Suffix
     |--------------------------------------------------------------------------
@@ -171,6 +181,7 @@ return [
     'manifest_file' => 'twill-manifest.json',
     'vendor_path' => 'vendor/area17/twill',
     'custom_components_resource_path' => 'assets/js/components',
+    'vendor_components_resource_path' => 'assets/vendor/js/components',
     'build_timeout' => 300,
     'internal_icons' => [
         'content-editor.svg',
@@ -195,8 +206,17 @@ return [
         'pt',
         'zh-Hans',
         'ru',
+        'tr',
+        'bs',
+        'ar'
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | When a singleton is not seeded, you can use this flag to automatically seed it.
+    |--------------------------------------------------------------------------
+    */
+    'auto_seed_singletons' => false,
 
     /*
     |--------------------------------------------------------------------------
@@ -215,6 +235,10 @@ return [
     'base_repository' => A17\Twill\Repositories\ModuleRepository::class,
 
     'base_controller' => A17\Twill\Http\Controllers\Admin\ModuleController::class,
+
+    'base_nested_controller' => A17\Twill\Http\Controllers\Admin\NestedModuleController::class,
+
+    'base_singleton_controller' => A17\Twill\Http\Controllers\Admin\SingletonModuleController::class,
 
     'base_request' => A17\Twill\Http\Requests\Admin\Request::class,
 ];
