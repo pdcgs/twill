@@ -501,6 +501,8 @@
 
     .ql-container.ql-snow {
       border-color: $color__fborder;
+      max-height: 700px;
+      overflow-y: scroll;
       .wysiwyg__editor--limitHeight {
         border: none;
       }
