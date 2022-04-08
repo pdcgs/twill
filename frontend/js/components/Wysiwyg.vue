@@ -706,4 +706,11 @@
       }
     }
   }
+  .ql-clipboard {
+    position: fixed;
+    display: none;
+
+    left: 50%;
+    top: 50%;
+  }
 </style>
