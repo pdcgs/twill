@@ -185,7 +185,10 @@ class Capsule
 
     public function getDatabasePsr4Path(): string
     {
-        return $this->path . '/Database';
+        if (File::exists($this->path . '/Database')) {
+            return $this->path . '/Database';
+        }
+        return $this->path . '/database';
     }
 
     public function getSeedsNamespace(): string
@@ -270,7 +273,8 @@ class Capsule
 
     public function getViewPrefix(): string
     {
-        return "{$this->getModule()}.resources.views.admin";
+        $name = Str::studly($this->name);
+        return "{$name}.resources.views.admin";
     }
 
     public function getRoutesFile(): string
