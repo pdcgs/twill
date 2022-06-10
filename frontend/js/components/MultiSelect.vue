@@ -4,7 +4,7 @@
       <div class="multiselector" :class="gridClasses">
         <div class="multiselector__outer">
           <div class="multiselector__item"
-               v-for="(checkbox, index) in fullOptions"
+               v-for="(checkbox, index) in this.options"
                :key="index"
                :style="itemStyle"
             >
