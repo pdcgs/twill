@@ -2,6 +2,58 @@
 
 All notable changes to `twill` will be documented in this file.
 
+## 2.8.7 (2022-06-10)
+
+### Features
+
+- Added `divider` (<hr>) support to the Quill toolbar [`#1679`](https://github.com/area17/twill/pull/1679)
+
+### Fixes
+
+- Fixed issue that would cause Twill ui to crash when using Quill [`#1680`](https://github.com/area17/twill/pull/1680)
+- Fixed some backwards compatability issues with older Laravel versions [`#1684`](https://github.com/area17/twill/pull/1684)
+- Fixed issue with browsers in the block editor [`#1689`](https://github.com/area17/twill/pull/1689)
+
+
+## 2.8.6 (2022-06-03)
+
+### Fixes
+
+- Fixed an issue that would not cleanup removed browser items in blocks [`#1675`](https://github.com/area17/twill/pull/1675)
+- Fixed an issue that would not display fields translatable in the edit modal window [`#1676`](https://github.com/area17/twill/pull/1676)
+
+## 2.8.5 (2022-05-27)
+
+### Fixes
+
+- Reverts change in build folder location
+
+## 2.8.4 (2022-05-25)
+
+### Fixes
+
+- Fixed console error when editing block with media in the block editor [`#1659`](https://github.com/area17/twill/pull/1659)
+
+## 2.8.3 (2022-05-19)
+
+### Fixes
+
+- Media fields can now be validated in blocks [`#1648`](https://github.com/area17/twill/pull/1648)
+- Internal links in quill are no longer set to target \_blank [`#1649`](https://github.com/area17/twill/pull/1649)
+- Improved restoring support for nested modules [`#1590`](https://github.com/area17/twill/pull/1590)
+
+## 2.8.2 (2022-05-06)
+
+### Fixes
+
+- Make site link translatable [`#1617`](https://github.com/area17/twill/pull/1617)
+- Fix SQL error on twill:refresh-crops command [`#1618`](https://github.com/area17/twill/pull/1618)
+- Fix locale if intl extension is missing. [`#1620`](https://github.com/area17/twill/pull/1620)
+- Fix usage of quotes in placeholder [`#1621`](https://github.com/area17/twill/pull/1621)
+- Fix visual issue with long notes on media [`#1612`](https://github.com/area17/twill/pull/1612)
+- Change search to allow less then 3 characters [`#1613`](https://github.com/area17/twill/pull/1613)
+- Add polyfill for doesntContain to ensure Laravel 7 compatability [`#1635`](https://github.com/area17/twill/pull/1635)
+
 ## 2.8.1 (2022-04-26)
 
 ### Fixes
@@ -12,7 +64,7 @@ All notable changes to `twill` will be documented in this file.
 
 ## 2.8.0 (2022-04-19)
 
-### Added 
+### Added
 
 No new features were added in the final release. Please check rc and beta tags to see a full
 list of new features and fixes.
@@ -40,7 +92,7 @@ list of new features and fixes.
 - Changed activity log morph size to bigInt [`#1565`](https://github.com/area17/twill/pull/1565)
 - Fixed leftover array accessor on capsule object [`#1574`](https://github.com/area17/twill/pull/1574)
 - Fixed small visual issue with long labels [`#1566`](https://github.com/area17/twill/pull/1566)
-- Fixed MorphMany saving [`#1460`](https://github.com/area17/twill/pull/1460) 
+- Fixed MorphMany saving [`#1460`](https://github.com/area17/twill/pull/1460)
 
 ### Docs
 
